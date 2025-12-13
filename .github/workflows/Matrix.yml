@@ -78,18 +78,11 @@ jobs:
         with:
           stack: dual        # Optional. Support [ ipv4, ipv6, dual ]. Default is dual.
           mode: client    # Optional. Support [ wireguard, client ]. Default is wireguard.
-      - uses: actions/checkout@main
-      - uses: FedericoCarboni/setup-ffmpeg@v2
+      # - uses: FedericoCarboni/setup-ffmpeg@v2
       - name: install dependencies
         run: npm i
 
-      - name: Debug Paths
-        run: |
-          echo "Current Directory: $(pwd)"
-          echo "Listing venv/bin contents:"
-          ls -l venv/bin/ || echo "venv/bin not found!"
       - name: run node
-        shell: bash
         env:
           YT_COOKIE: ${{ secrets.ytcookie }}
           PROPS: ${{ github.event.inputs.props }}
