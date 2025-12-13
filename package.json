@@ -21,7 +21,7 @@
     "@remotion/studio-server": "^4.0.375",
     "@remotion/studio-shared": "^4.0.375",
     "@remotion/web-renderer": "^4.0.375",
-    "@remotion/webcodecs": "^4.0.375",
+    "@remotion/webcodecs": "^4.0.387",
     "@remotion/zod-types": "4.0.375",
     "bgutils-js": "^3.2.0",
     "cross-fetch": "^4.1.0",
