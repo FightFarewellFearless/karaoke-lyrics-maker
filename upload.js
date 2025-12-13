@@ -47,6 +47,7 @@ async function uploadVideo(title, description, video) {
 }
 
 const description = `
+Subscribe to my first channel: https://www.youtube.com/@pirlesLrc
 ${props.musicTitle}
 Lyrics:
 ${synchronizeLyrics.map(line => line.text).join('\n')}
