@@ -83,6 +83,11 @@ jobs:
       - name: install dependencies
         run: npm i
 
+      - name: Debug Paths
+        run: |
+          echo "Current Directory: $(pwd)"
+          echo "Listing venv/bin contents:"
+          ls -l venv/bin/ || echo "venv/bin not found!"
       - name: run node
         shell: bash
         env:
