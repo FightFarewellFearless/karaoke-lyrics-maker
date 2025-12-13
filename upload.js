@@ -55,4 +55,4 @@ Don't forget to like, comment, and subscribe for more music videos!
 #lyrics #music
 `;
 
-uploadVideo(props.musicTitle + ' (Lyrics)', description, createReadStream('./video/video.mp4'));
+uploadVideo(props.musicTitle + ' (Karaoke)', description, createReadStream('./video/video.mp4'));

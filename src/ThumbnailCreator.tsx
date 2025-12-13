@@ -1,35 +1,98 @@
-import { loadFont } from "@remotion/google-fonts/Montserrat";
-import { loadFont as loadJP } from "@remotion/google-fonts/NotoSansJP";
+import { loadFont as loadFontNoto } from "@remotion/google-fonts/NotoSans";
+import { loadFont as loadFontAR } from "@remotion/google-fonts/NotoSansArabic";
+import { loadFont as loadFontJP } from "@remotion/google-fonts/NotoSansJP";
+import { loadFont as loadFontKR } from "@remotion/google-fonts/NotoSansKR";
+import { loadFont as loadFontSC } from "@remotion/google-fonts/NotoSansSC";
 import { AbsoluteFill, getStaticFiles, Img, random } from "remotion";
 import { z } from "zod";
 import { LoopableOffthreadVideo } from "./LoopableOffthreadVideo";
 import { defaultThumbnailSchema } from "./Root";
 
-const { fontFamily } = loadFont();
-const { fontFamily: fontFamilyJP } = loadJP();
+// 1. Universal Font Stack
+const { fontFamily: fontBase } = loadFontNoto();
+const { fontFamily: fontJP } = loadFontJP();
+const { fontFamily: fontKR } = loadFontKR();
+const { fontFamily: fontSC } = loadFontSC();
+const { fontFamily: fontArabic } = loadFontAR();
+const universalFontFamily = `${fontBase}, ${fontJP}, ${fontKR}, ${fontSC}, ${fontArabic}, sans-serif`;
 
-// Helper for the CSS Audio Bars
-const AudioBar = ({ delay, height }: { delay: number; height: number }) => (
+// --- NEW: Dynamic Font Size Logic ---
+// Calculates font size based on character count to fill space without overflowing
+const getDynamicFontSize = (text: string) => {
+  const len = text.length;
+  if (len <= 10) return "11rem"; // Short titles (e.g. "Stay")
+  if (len <= 20) return "9rem";  // Medium titles
+  if (len <= 35) return "7rem";  // Long titles
+  if (len <= 50) return "5rem";  // Very long titles
+  return "4rem";                 // Fallback for paragraphs
+};
+
+// Helper: Cyan Audio Bars
+const AudioBar = ({ height }: { height: number }) => (
   <div
     style={{
-      width: "12px",
+      width: "15px",
       height: `${height}px`,
-      backgroundColor: "#fff",
-      borderRadius: "6px",
-      boxShadow: "0 0 10px rgba(255,255,255,0.8)",
-      margin: "0 6px",
+      background: "linear-gradient(to top, #00b7ff, #ffffff)",
+      borderRadius: "4px",
+      boxShadow: "0 0 15px #00b7ff",
+      margin: "0 8px",
       opacity: 0.9,
     }}
   />
 );
 
+// SVG Microphone Icon
+const MicIcon = () => (
+  <svg
+    width="40"
+    height="40"
+    viewBox="0 0 24 24"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    style={{ marginRight: 15 }}
+  >
+    <path
+      d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"
+      fill="#00b7ff"
+    />
+    <path
+      d="M19 10v2a7 7 0 0 1-14 0v-2"
+      stroke="#00b7ff"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+    <line
+      x1="12"
+      y1="19"
+      x2="12"
+      y2="23"
+      stroke="#00b7ff"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+    <line
+      x1="8"
+      y1="23"
+      x2="16"
+      y2="23"
+      stroke="#00b7ff"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+  </svg>
+);
+
 export default function ThumbnailCreator(
   props: z.infer<typeof defaultThumbnailSchema>,
 ) {
-  // Generate a few random heights for the fake visualizer bars based on the title length
+  // Generate random heights for visualizer
   const seed = props.musicTitle.length;
-  const bars = new Array(5).fill(0).map((_, i) => ({
-    height: 40 + Math.floor(random(seed + i) * 60),
+  const bars = new Array(7).fill(0).map((_, i) => ({
+    height: 30 + Math.floor(random(seed + i) * 80),
   }));
 
   const bgSrc =
@@ -38,6 +101,9 @@ export default function ThumbnailCreator(
       : typeof props.background === "string"
         ? props.background
         : props.background.video;
+
+  // Calculate font size once
+  const titleFontSize = getDynamicFontSize(props.musicTitle);
 
   return (
     <AbsoluteFill>
@@ -50,8 +116,8 @@ export default function ThumbnailCreator(
               objectFit: "cover",
               width: "100%",
               height: "100%",
-              transform: "scale(1.05)", // Slight zoom to avoid edges
-              filter: "blur(4px) brightness(0.7) saturate(140%)",
+              transform: "scale(1.1)",
+              filter: "blur(6px) brightness(0.4) saturate(120%)",
             }}
           />
         ) : (
@@ -61,20 +127,19 @@ export default function ThumbnailCreator(
               objectFit: "cover",
               width: "100%",
               height: "100%",
-              transform: "scale(1.05)",
-              filter: "blur(4px) brightness(0.7) saturate(140%)",
+              transform: "scale(1.1)",
+              filter: "blur(6px) brightness(0.4) saturate(120%)",
             }}
             muted
           />
         )}
 
-        {/* Cinematic Vignette Overlay - Draws focus to center */}
         <div
           style={{
             position: "absolute",
             width: "100%",
             height: "100%",
-            background: `radial-gradient(circle at center, rgba(0,0,0,0.2) 0%, rgba(0,0,0,0.8) 100%)`,
+            background: `radial-gradient(circle at center, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.9) 100%)`,
           }}
         />
       </AbsoluteFill>
@@ -86,99 +151,130 @@ export default function ThumbnailCreator(
           flexDirection: "column",
           alignItems: "center",
           justifyContent: "center",
-          padding: "4rem",
+          padding: "60px",
         }}
       >
-        {/* Top Decoration: Fake Audio Visualizer */}
+        {/* Top: Visualizer */}
         <div
           style={{
             display: "flex",
             alignItems: "flex-end",
-            height: "100px",
-            marginBottom: "2rem",
+            height: "80px",
+            marginBottom: "30px",
           }}
         >
           {bars.map((bar, i) => (
-            <AudioBar key={i} delay={i} height={bar.height} />
+            <AudioBar key={i} height={bar.height} />
           ))}
         </div>
 
-        {/* Main Title */}
+        {/* Main Title - Stacked Layers for "Karaoke Stroke" effect */}
         <div
           style={{
             position: "relative",
             zIndex: 10,
             textAlign: "center",
-            maxWidth: "90%",
+            maxWidth: "95%",
+            marginBottom: "40px",
+            // Allow word wrapping but ensure centered alignment
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center"
           }}
         >
+          {/* Layer 1: The Stroke/Outline (Black) */}
           <h1
             style={{
-              color: "white",
-              fontSize: props.musicTitle.length > 20 ? "6rem" : "8rem", // Auto-scale font
+              fontFamily: universalFontFamily,
+              fontSize: titleFontSize, // <--- DYNAMIC SIZE APPLIED
               fontWeight: 900,
-              lineHeight: 0.95,
+              lineHeight: 1.1, // Slightly loose to prevent stroke overlap on multi-line
               textTransform: "uppercase",
               margin: 0,
-              fontFamily: `${fontFamily}, ${fontFamilyJP}, sans-serif`,
-              // CSS Text Stroke and Shadow for maximum readability
-              textShadow: `
-              0px 10px 30px rgba(0,0,0,0.5),
-              0px 0px 50px rgba(255,255,255,0.2)
-            `,
-              WebkitTextStroke: "2px rgba(0,0,0,0.1)",
-              letterSpacing: "-0.04em",
-              wordWrap: "break-word",
+              color: "transparent",
+              WebkitTextStroke: "15px black", 
+              position: "absolute",
+              top: 0,
+              left: 0,
+              width: "100%",
+              zIndex: -1,
+              wordWrap: "break-word"
+            }}
+          >
+            {props.musicTitle}
+          </h1>
+
+          {/* Layer 2: The Main White Text */}
+          <h1
+            style={{
+              fontFamily: universalFontFamily,
+              fontSize: titleFontSize, // <--- DYNAMIC SIZE APPLIED
+              fontWeight: 900,
+              lineHeight: 1.1,
+              textTransform: "uppercase",
+              margin: 0,
+              color: "white",
+              textShadow: "0 10px 40px rgba(0,0,0,0.5)",
+              wordWrap: "break-word"
             }}
           >
             {props.musicTitle}
           </h1>
         </div>
 
-        {/* "LYRICS" Badge */}
+        {/* "KARAOKE" Badge */}
         <div
           style={{
-            marginTop: "3rem",
-            background: "rgba(255, 255, 255, 0.95)",
-            padding: "0.8rem 3rem",
+            background: "rgba(0, 0, 0, 0.6)",
+            border: "3px solid #00b7ff",
+            padding: "1rem 3rem",
             borderRadius: "50px",
-            boxShadow:
-              "0 10px 20px rgba(0,0,0,0.3), 0 0 20px rgba(255,255,255,0.4)",
+            boxShadow: "0 0 30px rgba(0, 183, 255, 0.4), inset 0 0 20px rgba(0, 183, 255, 0.2)",
+            backdropFilter: "blur(10px)",
             display: "flex",
             alignItems: "center",
-            gap: "1rem",
+            justifyContent: "center",
+            marginTop: "10px"
           }}
         >
-          <div
-            style={{
-              width: "10px",
-              height: "10px",
-              background: "#ff3b3b", // "Recording" red dot
-              borderRadius: "50%",
-            }}
-          />
+          <MicIcon />
           <span
             style={{
-              color: "black",
-              fontSize: "2rem",
+              color: "white",
+              fontSize: "2.5rem",
               fontWeight: 800,
-              letterSpacing: "0.2em",
-              fontFamily: fontFamily,
+              letterSpacing: "0.15em",
+              fontFamily: universalFontFamily,
               textTransform: "uppercase",
+              textShadow: "0 0 10px #00b7ff",
             }}
           >
-            Lyrics
+            Karaoke
           </span>
         </div>
       </AbsoluteFill>
 
-      {/* 3. Frame Border (Optional aesthetic touch) */}
-      <AbsoluteFill
+      {/* 3. Bottom Progress Bar Decoration */}
+      <div
         style={{
-          border: "20px solid rgba(255,255,255,0.05)",
-          pointerEvents: "none",
+          position: "absolute",
+          bottom: 0,
+          left: 0,
+          width: "100%",
+          height: "12px",
+          background: "#111",
+          display: "flex",
         }}
-      />
+      >
+        <div
+          style={{
+            width: "65%",
+            height: "100%",
+            background: "#00b7ff",
+            boxShadow: "0 0 20px #00b7ff",
+          }}
+        />
+      </div>
     </AbsoluteFill>
   );
 }
