@@ -111,7 +111,7 @@ export async function downloadMusicFile(title) {
   execSync(`${process.cwd()}/venv/bin/audio-separator ./public/music.mp3 \\
             --output_format=MP3 \\
             --output_dir audio_output \\
-            --model_filename UVR-MDX-NET-Inst_HQ_4.onnx \\
+            --model_filename model_bs_roformer_ep_317_sdr_12.9755.ckpt \\
             --custom_output_names='{"Vocals": "vocals_output", "Drums": "drums_output", "Instrumental": "instrumental_output", "Bass": "bass_output"}'`);
   console.timeEnd("Separating audio tracks...");
 
