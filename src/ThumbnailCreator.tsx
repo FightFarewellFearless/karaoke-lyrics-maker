@@ -241,7 +241,7 @@ export default function ThumbnailCreator(
           <span
             style={{
               color: "white",
-              fontSize: "2.5rem",
+              fontSize: "3rem",
               fontWeight: 800,
               letterSpacing: "0.15em",
               fontFamily: universalFontFamily,
