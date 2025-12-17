@@ -14,7 +14,7 @@
     "@remotion/licensing": "^4.0.375",
     "@remotion/media-parser": "^4.0.375",
     "@remotion/media-utils": "^4.0.375",
-    "@remotion/player": "^4.0.375",
+    "@remotion/player": "^4.0.393",
     "@remotion/renderer": "^4.0.375",
     "@remotion/streaming": "^4.0.375",
     "@remotion/studio": "^4.0.375",
