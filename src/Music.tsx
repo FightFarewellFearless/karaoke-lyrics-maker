@@ -555,7 +555,14 @@ export default function Music(props: ExtendedProps) {
           }}
         >
           {activeLineIndex === 0 ? (
-            <div>
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                gap: 20,
+              }}
+            >
               <div
                 style={{
                   fontFamily: universalFontFamily,
@@ -581,7 +588,7 @@ export default function Music(props: ExtendedProps) {
               >
                 <div
                   style={{
-                    height: '6px',
+                    height: "6px",
                     width: `${(frame / (nextLine.start * fps)) * 100}%`,
                     backgroundColor: "#00b7ff",
                     borderRadius: "3px",
