@@ -248,25 +248,10 @@ const WordByWordLine = ({
       }}
     >
       {lineData.words.map((wordObj, index) => {
-        // --- LOGIKA PROGRESS BAR (FILL) ---
-        const duration = wordObj.end - wordObj.start;
-        const progress = currentDuration - wordObj.start;
-
-        let percent = 0;
-
-        if (currentDuration >= wordObj.end) {
-          percent = 100;
-        } else if (currentDuration < wordObj.start) {
-          percent = 0;
-        } else {
-          percent = Math.max(
-            0,
-            Math.min(100, (progress / (duration || 0.001)) * 100),
-          );
-        }
-
         const startFrame = wordObj.start * fps;
         const endFrame = wordObj.end * fps;
+        const isStarted = currentDuration >= wordObj.start;
+        const isEnded = currentDuration >= wordObj.end;
 
         return (
           <Animated
@@ -284,10 +269,9 @@ const WordByWordLine = ({
               fontSize: 70,
               fontWeight: 900,
 
-              // Teknik CSS Gradient untuk efek Progress Bar Halus
-              backgroundImage: `linear-gradient(to right, #00b7ff ${percent}%, rgba(255,255,255,0.5) ${percent}%)`,
-              WebkitBackgroundClip: "text",
-              WebkitTextFillColor: "transparent",
+              color: !isStarted || isEnded ? "#ffffffb7" : "#00b7ff",
+              // WebkitBackgroundClip: "text",
+              // WebkitTextFillColor: "transparent",
 
               WebkitTextStroke: "2px black",
 
@@ -418,11 +402,7 @@ export default function Music(props: ExtendedProps) {
   // --- 5. AUDIO VISUALIZATION ---
   const audioData = useAudioData(music);
   if (!audioData) return null;
-  const visualization = normalizeAudioData({
-    audioData,
-    fps,
-    frame,
-  });
+  const visualization = normalizeAudioData({ audioData, frame, fps });
 
   return (
     <>
@@ -597,13 +577,42 @@ export default function Music(props: ExtendedProps) {
               </div>
             </div>
           ) : (
-            <WordByWordLine
-              lineData={currentLine}
-              currentDuration={duration}
-              fontFamily={universalFontFamily}
-              isHidden={showCountdown}
-              fps={fps}
-            />
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                gap: 20,
+              }}
+            >
+              <WordByWordLine
+                lineData={currentLine}
+                currentDuration={duration}
+                fontFamily={universalFontFamily}
+                isHidden={showCountdown}
+                fps={fps}
+              />
+              <div
+                style={{
+                  display: isGlobalInstrumental ? "none" : "block",
+                  width: "60vw",
+                  height: 6,
+                  backgroundColor: "rgba(255,255,255,0.2)",
+                  borderRadius: 3,
+                  overflow: "hidden",
+                  boxShadow: "inset 0 1px 3px rgba(0,0,0,0.5)",
+                }}
+              >
+                <div
+                  style={{
+                    width: `${Math.min(100, Math.max(0, (duration - (currentLine?.start ?? 0)) / ((nextLine?.start ?? 0) - (currentLine?.start ?? 0))) * 100)}%`,
+                    height: "100%",
+                    backgroundColor: "#00b7ff",
+                    boxShadow: "0 0 10px #00b7ff",
+                  }}
+                ></div>
+              </div>
+            </div>
           )}
         </Animated>
 
