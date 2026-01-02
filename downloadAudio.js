@@ -251,7 +251,7 @@ export async function downloadMusicFile(title) {
     "./audio_output/instrumental_output.mp3",
     "./public/music.mp3",
   );
-  execSync(`${process.cwd()}/venv/bin/stable-ts ./audio_output/vocals_output --align ./public/plainLyrics.txt --language ${translate.src} --denoiser demucs --vad true --segment_level false -o ./public/wordByWordLyrics.vtt -to "original_split=1"`);
+  execSync(`${process.cwd()}/venv/bin/stable-ts ./audio_output/vocals_output.mp3 --align ./public/plainLyrics.txt --language ${translate.src} --denoiser demucs --vad true --segment_level false -o ./public/wordByWordLyrics.vtt -to "original_split=1"`);
 }
 
 console.log("Starting downloadMusicFile...");
