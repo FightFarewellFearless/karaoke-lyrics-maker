@@ -189,7 +189,7 @@ export async function downloadMusicFile(title) {
     searchData.syncedLyrics
       .split("\n")
       .map((a) => a.split("]")[1].trim())
-      .join(" "),
+      .join("\n"),
   );
   const syncronizeLyricsRaw = searchData.syncedLyrics.split("\n");
   syncronizeLyricsRaw.forEach((a) => {
