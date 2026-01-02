@@ -329,11 +329,6 @@ export default function Music(props: ExtendedProps) {
         return false;
       });
 
-      wordsInThisLine.forEach((w) => {
-        const index = vttWords.indexOf(w);
-        if (index > -1) vttWords.splice(index, 1);
-      });
-
       result.push({
         start: lineStart,
         end: lineEnd,
