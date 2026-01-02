@@ -20,6 +20,7 @@ on:
             "musicTitle": "",
             "translateTo": "none",
             "syncronizeLyrics": [],
+            "wordByWordLyrics": "",
             "translateSyncronizeLyrics": [],
             "background": "default",
             "ytmMusicInfo": "",
@@ -72,6 +73,7 @@ jobs:
           python -m venv venv
           source venv/bin/activate
           pip install "audio-separator[cpu]"
+          pip install -U git+https://github.com/jianfch/stable-ts.git
       
       - name: Set up WARP
         uses: fscarmen/warp-on-actions@v1.4
