@@ -7,13 +7,13 @@ import { z } from "zod";
 import ThumbnailCreator from "./ThumbnailCreator";
 import { checkRomanizationIsNeeded, romanize, translateLyric } from "./googletranslate";
 
-// Each <Composition> is an entry in the sidebar!
 export type DefaultProps = {
   musicTitle: string;
   syncronizeLyrics: {
     start: number;
     text: string;
   }[];
+  wordByWordLyrics: "";
   translateSyncronizeLyrics: {
     start: number;
     text: string;
@@ -32,6 +32,7 @@ export const DefaultSchema = z.object({
     start: z.number(),
     text: z.string(),
   })),
+  wordByWordLyrics: z.string(),
   translateSyncronizeLyrics: z.array(z.object({
     start: z.number(),
     text: z.string(),
@@ -45,6 +46,7 @@ export const DefaultSchema = z.object({
 const defaultProps: DefaultProps = {
   "musicTitle": "Nothing's gonna change my love for you",
   "syncronizeLyrics": [],
+  "wordByWordLyrics": "",
   "translateSyncronizeLyrics": [],
   "background": "default",
   "ytmMusicInfo": "",
@@ -131,6 +133,7 @@ const calculateMetadata: CalculateMetadataFunction<DefaultProps> = async ({
   let translateSyncronizeLyrics: SYNCLRC = [];
   let searchData: APIRes;
   let ytmSearchResult: YTMSearch;
+  let wordByWordLyrics = "";
 
   if (process.env.REMOTION_USE_LOCAL_DIR !== 'yes') {
     ytmSearchResult = await fetch(
@@ -177,6 +180,7 @@ const calculateMetadata: CalculateMetadataFunction<DefaultProps> = async ({
     ).then(a => a.json()).then((a: YTMSearch[]) => a[0]);
     syncronizeLyrics = await fetch(staticFile('syncronizeLyrics.json')).then(a => a.json());
     translateSyncronizeLyrics = await fetch(staticFile('translateSyncronizeLyrics.json')).then(a => a.json());
+    wordByWordLyrics = await fetch(staticFile('wordByWordLyrics.vtt')).then(a => a.text());
   }
 
   let { background } = props;
@@ -193,6 +197,7 @@ const calculateMetadata: CalculateMetadataFunction<DefaultProps> = async ({
     props: {
       ...props,
       syncronizeLyrics: [{ start: 0, text: `[${searchData.trackName} - ${searchData.artistName}]` }, ...syncronizeLyrics],
+      wordByWordLyrics,
       translateSyncronizeLyrics,
       background,
       ytmThumbnail: ytmSearchResult.thumbnail,

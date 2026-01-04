@@ -184,7 +184,13 @@ export async function downloadMusicFile(title) {
   const searchData = data[props.searchLyricsIndex];
   console.log("Selected lyrics data:", searchData);
   fs.writeFileSync("./public/searchData.json", JSON.stringify(searchData));
-
+  fs.writeFileSync(
+    "./public/plainLyrics.txt",
+    searchData.syncedLyrics
+      .split("\n")
+      .map((a) => a.split("]")[1].trim())
+      .join("\n"),
+  );
   const syncronizeLyricsRaw = searchData.syncedLyrics.split("\n");
   syncronizeLyricsRaw.forEach((a) => {
     try {
@@ -245,6 +251,7 @@ export async function downloadMusicFile(title) {
     "./audio_output/instrumental_output.mp3",
     "./public/music.mp3",
   );
+  execSync(`${process.cwd()}/venv/bin/stable-ts ./audio_output/vocals_output.mp3 --align ./public/plainLyrics.txt --language ${translate.src} --denoiser demucs --vad true --segment_level true --model medium -o ./public/wordByWordLyrics.vtt -to "original_split=True" -to "aligner=new" --refine`);
 }
 
 console.log("Starting downloadMusicFile...");
