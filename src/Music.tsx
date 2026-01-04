@@ -417,7 +417,7 @@ export default function Music(props: ExtendedProps) {
   // --- 5. VISUALIZATION ---
   const audioData = useAudioData(music);
   if (!audioData) return null;
-  const visualization = [] //normalizeAudioData({ audioData, frame, fps });
+  const visualization = normalizeAudioData({ audioData, frame, fps });
 
   return (
     <>
