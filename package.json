@@ -19,7 +19,7 @@
     "@remotion/streaming": "^4.0.375",
     "@remotion/studio": "^4.0.375",
     "@remotion/studio-server": "^4.0.375",
-    "@remotion/studio-shared": "^4.0.375",
+    "@remotion/studio-shared": "^4.0.393",
     "@remotion/web-renderer": "^4.0.375",
     "@remotion/webcodecs": "^4.0.375",
     "@remotion/zod-types": "4.0.375",
