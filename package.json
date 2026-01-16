@@ -10,7 +10,7 @@
     "@remotion/bundler": "^4.0.375",
     "@remotion/cli": "4.0.375",
     "@remotion/compositor-linux-x64-gnu": "^4.0.375",
-    "@remotion/google-fonts": "4.0.375",
+    "@remotion/google-fonts": "4.0.393",
     "@remotion/licensing": "^4.0.375",
     "@remotion/media-parser": "^4.0.375",
     "@remotion/media-utils": "^4.0.375",
